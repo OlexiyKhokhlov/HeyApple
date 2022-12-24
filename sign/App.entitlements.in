@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>com.apple.developer.team-identifier</key>
+        <string>@GROUP_ID@</string>
+        <key>com.apple.application-identifier</key>
+        <string>@GROUP_ID@.@MAIN_APP_ID@</string>
+	<key>com.apple.developer.networking.networkextension</key>
+	<array>
+                <string>@APPLE_PROVIDER_TYPE@</string>
+	</array>
+	<key>com.apple.developer.system-extension.install</key>
+	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+                <string>@GROUP_ID@.@MAIN_APP_ID@</string>
+	</array>
+</dict>
+</plist>

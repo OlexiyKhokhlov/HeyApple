@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+set -x
+
+print_usage_error()
+{
+    echo "Usage: $0 <build dir> <install dir> <extension dir> <sign certificate name> <sign prefix>"
+    exit 1
+}
+
+[ ! -z "$1" ] || print_usage_error
+[ ! -z "$2" ] || print_usage_error
+[ ! -z "$3" ] || print_usage_error
+[ ! -z "$4" ] || print_usage_error
+[ ! -z "$5" ] || print_usage_error
+
+BUILD_PATH=$(cd "$1" && pwd)
+INSTALL_PATH=$(cd "$2" && pwd)
+EXTENSION_PATH=$(cd "$3" && pwd)
+SERT_NAME="$4"
+SIGN_PREFIX="$5"
+
+APPLICATION_ENTITLEMENTS="${BUILD_PATH}/App.entitlements"
+EXTENSION_ENTITLEMENTS="${BUILD_PATH}/Extension.entitlements"
+
+# Sign everything
+codesign --force --options runtime --verbose --prefix "${SIGN_PREFIX}" --deep --sign "${SERT_NAME}" "${INSTALL_PATH}"
+
+# Sign Extension
+codesign --force --options runtime --verbose --prefix "${SIGN_PREFIX}" --sign "${SERT_NAME}" --entitlements "${EXTENSION_ENTITLEMENTS}"  --generate-entitlement-der "${EXTENSION_PATH}"
+
+# Fix all
+codesign --force --options runtime --verbose --prefix "${SIGN_PREFIX}" --sign "${SERT_NAME}" --entitlements "${APPLICATION_ENTITLEMENTS}" --generate-entitlement-der "${INSTALL_PATH}"
+
+codesign --display -vvv "${INSTALL_PATH}"
+codesign --verify --verbose "${INSTALL_PATH}"
